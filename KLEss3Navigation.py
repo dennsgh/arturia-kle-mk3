@@ -283,8 +283,12 @@ class NavigationMode:
     def PartRefresh(self) :
         bankinf = str(1 + AKLEss3.PART_OFFSET*8)
         banksup = str(8 + AKLEss3.PART_OFFSET*8)
+        title = ""
+        if int(bankinf) > 32: title = "Sends" 
+        else: title = "Tracks"
+
         self._paged_display.SetCenterPage(17,
-                                        line1= "Tracks",
+                                        line1= title,
                                         line2= bankinf + ' - ' + banksup,
                                         )
 
