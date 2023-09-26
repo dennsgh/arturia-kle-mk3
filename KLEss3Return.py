@@ -141,7 +141,7 @@ class KLEssReturn:
         if transport.isRecording() :
             send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x7F, 0x00, 0x00]))
         else :
-            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x20, 0x00, 0x00]))
+            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x10, 0x00, 0x00]))
 
 
 
