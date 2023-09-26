@@ -1,11 +1,11 @@
-# name=KeyLab Essential mk3
+# name=KeyLab Essential mk3 [FLK]
 
 # supportedHardwareIds=00 20 6B 02 00 05 72,00 20 6B 02 00 05 74
 
 """
 [[
 	Surface:	KeyLab Essential mk3
-	Developer:	Farès MEZDOUR
+	Developer:	Farès MEZDOUR, Flicksie
 	Version:	0.1
 ]]
 """
