@@ -166,7 +166,7 @@ class KLEssReturn:
         if transport.isRecording() :            
             COLOR_RECORDING_ON = bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x7F, 0x00, 0x00]) 
             COLOR_RECORDING_OFF = bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x20, 0x00, 0x00]) 
-            if value == 0 :
+            if value == 1 :
                 send_to_device(COLOR_RECORDING_OFF)
             else :
                 send_to_device(COLOR_RECORDING_ON)
