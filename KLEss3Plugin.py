@@ -78,7 +78,12 @@ def Plugin(hw_param, hw_value, moved_param) :
 
     recognized_plugin = False
     # plugin_name = ui.getFocusedPluginName() Like that before
-    plugin_name = plugins.getPluginName(channels.selectedChannel()) # Modify parameters without opening the instrument
+    try:
+        plugin_name = plugins.getPluginName(channels.selectedChannel()) # Modify parameters without opening the instrument
+    except:
+        print("Plugin Error:", channels.selectedChannel())
+        plugin_name = "Unknown"
+
     
     global ABSOLUTE_VALUE
     
