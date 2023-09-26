@@ -729,12 +729,12 @@ class KLEssMidiProcessor:
 
             # 32+ = Sends: Cyan LED
             ui.miDisplayRect(1+(8*AKLEss3.PART_OFFSET),8+(8*AKLEss3.PART_OFFSET),1000)
-            if AKLEss3.PART_OFFSET > 3
+            if AKLEss3.PART_OFFSET > 3:
                 send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x20, 0x7F, 0x7F]))
             # <=32 = Inserts: White LED
-            else
+            else:
                 send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x7F, 0x7F, 0x7F]))
-                
+
             self._navigation.PartRefresh()
         
 
