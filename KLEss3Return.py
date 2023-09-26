@@ -141,7 +141,7 @@ class KLEssReturn:
         if transport.isRecording() :
             send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x7F, 0x00, 0x00]))
         else :
-            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x10, 0x00, 0x00]))
+            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedRecord, 0x10, 0x10, 0x00]))
 
 
 
@@ -149,13 +149,13 @@ class KLEssReturn:
         if mixer.getSongTickPos() != 0 :
             send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x7F, 0x00]))
         else :
-            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x20, 0x00]))
+            send_to_device(bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x10, 0x00]))
 
             
 
     def ProcessPlayBlink(self, value):
         COLOR_PLAY_ON = bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x7F, 0x00]) 
-        COLOR_PLAY_OFF =  bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x20, 0x00]) 
+        COLOR_PLAY_OFF =  bytes([0x04, 0x01, 0x16, eLedIds.eLedPlay, 0x00, 0x10, 0x00]) 
         if value == 0 :
             send_to_device(COLOR_PLAY_OFF)
         else :
