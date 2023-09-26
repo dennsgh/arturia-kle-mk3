@@ -57,6 +57,8 @@ IS_PART_PRESSED = 0
 #When the user selects a custom part
 IS_CUSTOM_PART = 0
 
+# Max parts before wrapping around
+MAX_PARTS = 5
 
 
 
@@ -706,28 +708,37 @@ class KLEssMidiProcessor:
     def PartOn(self , event) :
         global IS_PART_PRESSED
         global IS_CUSTOM_PART
+        global MAX_PARTS
+        
         
 
         if self._is_pressed(event) :
             IS_PART_PRESSED = 1
             IS_CUSTOM_PART = 0
+            send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x7F, 0x20, 0x20]))
 
         else :
             IS_PART_PRESSED = 0
             #self.FakeMIDImsg()
 
-
+        print( IS_CUSTOM_PART, IS_PART_PRESSED, 3 )
+        
         if (IS_CUSTOM_PART == 0 and IS_PART_PRESSED == 0) :
-            if AKLEss3.PART_OFFSET == 0 :
-                AKLEss3.PART_OFFSET = 1
-                ui.miDisplayRect(1+(8*AKLEss3.PART_OFFSET),8+(8*AKLEss3.PART_OFFSET),1000)
+            AKLEss3.PART_OFFSET += 1
+            if AKLEss3.PART_OFFSET >= MAX_PARTS: AKLEss3.PART_OFFSET = 0
+
+            # 32+ = Sends: Cyan LED
+            ui.miDisplayRect(1+(8*AKLEss3.PART_OFFSET),8+(8*AKLEss3.PART_OFFSET),1000)
+            if AKLEss3.PART_OFFSET > 3
+                send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x20, 0x7F, 0x7F]))
+            # <=32 = Inserts: White LED
+            else
                 send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x7F, 0x7F, 0x7F]))
-                self._navigation.PartRefresh()
-            else :
-                AKLEss3.PART_OFFSET = 0
-                ui.miDisplayRect(1+(8*AKLEss3.PART_OFFSET),8+(8*AKLEss3.PART_OFFSET),1000)
-                send_to_device(bytes([0x04, ePatch.eDaw, 0x16, eLedIds.eLedPart, 0x20, 0x20, 0x20]))
-                self._navigation.PartRefresh()
+                
+            self._navigation.PartRefresh()
+        
+
+                
         elif (IS_CUSTOM_PART == 1 and IS_PART_PRESSED == 0) :                                        # This is a LED Return function exception because of flag issue
             #print("ca passe")
             if AKLEss3.PART_OFFSET != 0 :
