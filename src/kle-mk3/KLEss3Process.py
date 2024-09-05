@@ -176,6 +176,7 @@ class KLEssMidiProcessor:
             MidiEventDispatcher(by_midi_id)
             .NewHandler(176, self.OnCommandEvent)
             .NewHandler(224, self.OnWheelEvent)
+            .NewHandlerForKeys([224,240], self.OnWheelEvent)
             )
         
         self._midi_command_dispatcher = (
@@ -259,7 +260,7 @@ class KLEssMidiProcessor:
         if channels.selectedChannel(1) != -1 :
             if plugins.isValid(channels.selectedChannel()) : 
                 if plugins.getPluginName(channels.selectedChannel()) not in ArturiaVCOL.V_COL :
-                    if event.status == midi.MIDI_PITCHBEND :
+                    if event.midiId == midi.MIDI_PITCHBEND :
                         channels.setChannelPitch(channels.selectedChannel(),(event.data2-64)*(100/64)*channels.getChannelPitch(channels.selectedChannel(),2),1) # SMALL RANGE
                     #channels.setChannelPitch(channels.selectedChannel(),round(18.75 * event.data2 - 1200),1) #FULL RANGE     
                     else:
@@ -314,7 +315,6 @@ class KLEssMidiProcessor:
                 return
             if nodeFileType <= -100:
                 transport.globalTransport(midi.FPT_Enter, 1)
-                #transport.globalTransport(midi.FPT_Down, 1) -- Increase 1 item for navigation
             else:
                 ui.selectBrowserMenuItem()
                 if not ui.isInPopupMenu() :
@@ -568,24 +568,24 @@ class KLEssMidiProcessor:
 
     def SetVolumeMasterTrack(self, event) :
         HW_value = event.data2
-        if MIXER_MODE == 1 :
-            mixer.setTrackVolume(0,HW_value/127, 2)
-            self._navigation.VolumeMasterChRefresh(HW_value)
-        else :
-            mixer.setTrackVolume(mixer.trackNumber(),HW_value/127)
-            clef = 0
-            self._navigation.VolumeChRefresh(HW_value, clef)
+        # if MIXER_MODE == 1 :
+        #     mixer.setTrackVolume(0,HW_value/127, 2)
+        #     self._navigation.VolumeMasterChRefresh(HW_value)
+        # else :
+        mixer.setTrackVolume(mixer.trackNumber(),HW_value/127)
+        clef = 0
+        self._navigation.VolumeChRefresh(HW_value, clef)
 
     def SetPanMasterTrack(self, event) :
         HW_value = event.data2
-        value = round(event.data2*(128/127)-64)/64
-        if MIXER_MODE == 1 :
-            mixer.setTrackPan(0,(HW_value*(128/127)-64)/64)
-            self._navigation.PanMasterChRefresh(HW_value)
-        else :
-            mixer.setTrackPan(mixer.trackNumber(),(HW_value*(128/127)-64)/64)
-            clef = 0
-            self._navigation.PanChRefresh(HW_value, clef)
+        # value = round(event.data2*(128/127)-64)/64
+        # if MIXER_MODE == 1 :
+        #     mixer.setTrackPan(0,(HW_value*(128/127)-64)/64)
+        #     self._navigation.PanMasterChRefresh(HW_value)
+        # else :
+        mixer.setTrackPan(mixer.trackNumber(),(HW_value*(128/127)-64)/64)
+        clef = 0
+        self._navigation.PanChRefresh(HW_value, clef)
 
 
     def AnalogLabPreset(self, event) :
@@ -653,7 +653,7 @@ class KLEssMidiProcessor:
         if plugins.getPluginName(channels.selectedChannel()) in ArturiaVCOL.V_COL :
             device.forwardMIDICC(event.status + (event.data1 << 8) + (event.data2 << 16) + (PORT_MIDICC_ANALOGLAB << 24))
         else :
-            self.Plugin(event)
+            self.Plugin(event, 1)
         
         
     def Save(self, event) :
@@ -774,7 +774,7 @@ class KLEssMidiProcessor:
 
 
     def PadRefresh(self, Matrix) :
-        for i in range(16) : # TODO 
+        for i in range(16) :
             if Matrix[i] :
                 send_to_device(bytes([0x04, ePatch.eDaw, 0x16, PAD_MATRIX[i], 0x7F, 0x7F, 0x7F]))
             else :
