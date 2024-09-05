@@ -1,4 +1,4 @@
-# name=KeyLab Essential mk3
+# name=arturia kle-mk3
 
 # supportedHardwareIds=00 20 6B 02 00 05 72,00 20 6B 02 00 05 74
 
@@ -106,7 +106,7 @@ def OnMidiMsg(event) :
 # Function called when FL Studio is starting
 
 def OnInit():
-    print('Loaded MIDI script for Arturia KeyLab Essential 3')
+    print('Loaded MIDI script for Arturia KeyLab Essential 3 [arturia kle-mk3]')
     init()
     time.sleep(2)
     _KLEss3.connexion().DAWConnexion()
@@ -136,7 +136,7 @@ def init() :
 def OnDeInit():
     # Deconnxexion
 
-    _KLEss3._paged_display.SetCenterPage(20, line1="KeyLab Essential mk3", line2="Disconnected", icon=eIcons.eFL, transient=1)
+    _KLEss3._paged_display.SetCenterPage(20, line1="arturia kle-mk3", line2="Disconnected", icon=eIcons.eFL, transient=1)
     _KLEss3.connexion().DAWDisconnection()
     # _KLEss3.connexion().ArturiaDisconnection()
    
