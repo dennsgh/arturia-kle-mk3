@@ -1,4 +1,4 @@
-# name=KeyLab Essential mk3 (dev)
+# name=arturia kle-mk3
 # supportedHardwareIds=00 20 6B 02 00 05 72,00 20 6B 02 00 05 74,00 20 6B 02 00 05 78
 
 """
