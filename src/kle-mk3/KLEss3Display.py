@@ -71,14 +71,15 @@ class KLEssDisplay:
     def _get_line_src(self, line, length) :
 
         is_ascii = True
+        line_src = line
 
-        # if line == "" :
-        #     line_src == ".Empty."
-        # else :
+        if line == "" :
+            line_src == ".Empty."
+        else :
 
-        for i in line :
-            if ord(i) not in range (0,128) :          #Undefined char '?'
-                is_ascii = False
+            for i in line :
+                if ord(i) not in range (0,128) :          #Undefined char '?'
+                    is_ascii = False
     
         if is_ascii :
             if len(line) > length :
