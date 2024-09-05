@@ -1,12 +1,11 @@
-# name=arturia kle-mk3
-
-# supportedHardwareIds=00 20 6B 02 00 05 72,00 20 6B 02 00 05 74
+# name=KeyLab Essential mk3 (dev)
+# supportedHardwareIds=00 20 6B 02 00 05 72,00 20 6B 02 00 05 74,00 20 6B 02 00 05 78
 
 """
 [[
 	Surface:	KeyLab Essential mk3
 	Developer:	Farès MEZDOUR
-	Version:	0.1
+	Version:	1.0
 ]]
 """
 
@@ -22,8 +21,7 @@ import plugins
 import transport
 import ui
 
-import ArturiaVCOL
-from KLEss3Buttons import KLEssCTXButton
+
 from KLEss3Connexion import KLEssConnexion
 from KLEss3Dispatch import send_to_device
 from KLEss3Display import KLEssDisplay
@@ -92,6 +90,10 @@ class MidiControllerConfig :
                                             )
 
 
+        _KLEss3._paged_display.SetHeaderPage("Channel Rack")
+        _KLEss3._paged_display.SetFooterPage()
+
+
 
 #----------------------------------------------------------------------------------------
 
@@ -108,21 +110,18 @@ def OnMidiMsg(event) :
 def OnInit():
     print('Loaded MIDI script for Arturia KeyLab Essential 3 [arturia kle-mk3]')
     init()
-    time.sleep(2)
     _KLEss3.connexion().DAWConnexion()
-    time.sleep(2)
     _KLEss3.Return().init()
-    time.sleep(1)
     _KLEss3._paged_display.SetCenterPage(20, line1=ui.getProgTitle(), line2="Connected", icon=eIcons.eFL, transient=1)
-    #time.sleep(3)
-    #_KLEss3.RefreshMainScreen()
-    print("### Messages successfully sent to KeyLab Essential 3 ###")
+    time.sleep(1)
+    # _KLEss3.RefreshMainScreen() #TODO Find a solution  !!!
+    print("### Messages successfully sent to KeyLab Essential mk3 ###")
 
 
         
 def init() :
-    
     # Connxexion
+
     global _KLEss3 
     _KLEss3 = MidiControllerConfig()
     global _processor
@@ -136,7 +135,6 @@ def init() :
 def OnDeInit():
     # Deconnxexion
 
-    _KLEss3._paged_display.SetCenterPage(20, line1="arturia kle-mk3", line2="Disconnected", icon=eIcons.eFL, transient=1)
     _KLEss3.connexion().DAWDisconnection()
     # _KLEss3.connexion().ArturiaDisconnection()
    
@@ -152,7 +150,7 @@ def OnUpdateBeatIndicator(value):
 
 def OnRefresh(flags) :
 
-    if flags not in [4,4096] :
+    if flags not in [4,4096, 34135] :
         _KLEss3.Return().RecordReturn()
         _KLEss3.Return().PlayReturn()
         _KLEss3.Return().LoopReturn()
@@ -160,17 +158,14 @@ def OnRefresh(flags) :
         _KLEss3.Return().ChannelRackReturn()
         _KLEss3.Return().MixerReturn()
         _KLEss3.Return().BrowserReturn()
-        
-        
-    #_KLEss3.Return().PluginParamReturn()
+
+    if flags in [4096] :
+        _KLEss3.Return().ParamReturn("Channel Rack") # Need to be combined with a param refresh on Return function
+
+    if flags in [4] :
+        _KLEss3.Return().ParamReturn("Mixer") # Need to be combined with a param refresh on Return function
 
     #print("flags : ", flags)
-    #if flags in [4,256,260,4608] :
-    #if flags in [98679, 115063] :
-        #_KLEss3.RefreshMainScreen()
-        # _KLEss3.Return().ChannelRackReturn()
-        # _KLEss3.Return().MixerReturn()
-        # _KLEss3.Return().BrowserReturn()
     
 
 
@@ -183,10 +178,3 @@ def OnRefresh(flags) :
         
 
 #def OnSysEx(event) :
-
-
-
-def OnProjectLoad(status) :
-    if status == midi.PL_Start :
-        _KLEss3._paged_display.SetCenterPage(10, line1="Loading Project...", transient=1)
-    
