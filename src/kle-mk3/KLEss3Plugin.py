@@ -889,7 +889,7 @@ def Plugin(hw_param, hw_value, moved_param) :
             if PLUGIN_PARAM != -1 :
                 mapped = 1
                 value = hw_value/127
-                plugins.setParamValue(value,PLUGIN_PARAM ,channels.selectedChannel())
+                plugins.setParamValue(value, PLUGIN_PARAM ,channels.selectedChannel())
                 #event.handled = False
                 parameter = str(plugins.getParamName(PLUGIN_PARAM, channels.selectedChannel()))
                 value = str(round(100*plugins.getParamValue(PLUGIN_PARAM, channels.selectedChannel())))
@@ -917,7 +917,7 @@ def Plugin(hw_param, hw_value, moved_param) :
                     mapped = None
                     value = round(127*plugins.getParamValue(param_value[i], channels.selectedChannel()))
                     #print(i, value)
-                    SetParamValue(i, value)
+                    SetKnobValue(i, value)
 
 
     else :
@@ -936,7 +936,7 @@ def Plugin(hw_param, hw_value, moved_param) :
     return parameter, value, mapped
     
 
-def SetParamValue(param, value):
+def SetKnobValue(param, value):
     
     send_to_device(bytes([0x02, 0x0F, 0x40, 3 + param, value]))
     
