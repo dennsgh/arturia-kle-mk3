@@ -1,6 +1,9 @@
 import midi
 import channels
 import mixer
+import ui
+
+from KLEss3Dispatch import send_to_device
 
 # This script contains big fonctions that can be shared with other scripts
 
@@ -47,3 +50,11 @@ def SetPanTrack(event):
         mixer.setTrackPan(7 + (8*PART_OFFSET), (event.data2/64)-1)
     elif event.data1 == 103 :
         mixer.setTrackPan(8 + (8*PART_OFFSET), (event.data2/64)-1)
+
+
+def SetKnobValue():
+
+    for i in range(8) :
+        value = round(((mixer.getTrackPan((1+i) + (8*PART_OFFSET))+1)*0.5)*127)
+        send_to_device(bytes([0x02, 0x0F, 0x40, 3 + i, value]))
+
