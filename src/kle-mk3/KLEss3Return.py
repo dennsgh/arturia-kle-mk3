@@ -14,7 +14,7 @@ import KLEss3Plugin
 
 from Icons import eIcons
 from LedIds import eLedIds
-import ArturiaCrossKeyboardKLEss3 as AKLEss3
+
 
 
 # This class handles visual feedback functions.
@@ -186,12 +186,22 @@ class KLEssReturn:
     #     send_to_device(bytes([0x02, 0x02, 0x16, 0x05, 0x00, 0x00, 0x7f]))
     #     time.sleep(0.1)
 
-    def PluginParamReturn(self):
-        if channels.selectedChannel(1) != -1 :
-            if plugins.isValid(channels.selectedChannel()) : 
-                if plugins.getPluginName(channels.selectedChannel()) in KLEss3Plugin.NATIVE_PLUGIN_LIST :
-                    #print("Reresh parameter")
-                    parameter, value, mapped = KLEss3Plugin.Plugin(0, 0, 0)
+    def ParamReturn(self, window):
+
+        # Knob 1 - 8
+        if window == "Mixer" :
+            AKLEss3.SetKnobValue()
+        else :
+            if channels.selectedChannel(1) != -1 :
+                if plugins.isValid(channels.selectedChannel()) : 
+                    if plugins.getPluginName(channels.selectedChannel()) in KLEss3Plugin.NATIVE_PLUGIN_LIST :
+                        parameter, value, mapped = KLEss3Plugin.Plugin(0, 0, 0)
+        
+        
+        # Knob 9
+        value = round(((mixer.getTrackPan(mixer.trackNumber())+1)*0.5)*127)
+        send_to_device(bytes([0x02, 0x0F, 0x40, 11, value]))
+
 
 
     def BrowserReturn(self) :
@@ -226,6 +236,8 @@ class KLEssReturn:
 
             self._paged_display.SetHeaderPage("Browser")
             self._paged_display.SetFooterPage()
+
+            
 
 
 
@@ -274,8 +286,11 @@ class KLEssReturn:
             self._paged_display.SetHeaderPage("Mixer")
             self._paged_display.SetFooterPage()
 
+            self.ParamReturn("Mixer") # Need to be combinen with a param refresh on OnRefresh function
+
 
     def ChannelRackReturn(self) :
+
         if ui.getFocused(WidChannelRack) or ui.getFocused(WidPlugin) == True :
 
             KLEss3Pr.MIXER_MODE = 0
@@ -328,5 +343,4 @@ class KLEssReturn:
             self._paged_display.SetHeaderPage("Channel Rack")
             self._paged_display.SetFooterPage()
 
-
-
+            self.ParamReturn("Channel Rack") # Need to be combinen with a param refresh on OnRefresh 
